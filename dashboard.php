@@ -6,6 +6,36 @@ if (!isset($_SESSION['wifi_name'])) {
     header('Location: index.php');
     exit();
 }
+
+// Function to get server IP address
+function getServerIP() {
+    // Try to get the local IP address automatically
+    if (isset($_SERVER['SERVER_ADDR']) && $_SERVER['SERVER_ADDR'] != '::1' && $_SERVER['SERVER_ADDR'] != '127.0.0.1') {
+        return $_SERVER['SERVER_ADDR'];
+    }
+    
+    // Fallback: try to get local IP from network interfaces
+    $localIP = '192.168.1.100'; // Default fallback
+    
+    if (function_exists('shell_exec')) {
+        // Windows
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $output = shell_exec('ipconfig | findstr "IPv4"');
+            if (preg_match('/\d+\.\d+\.\d+\.\d+/', $output, $matches)) {
+                $localIP = $matches[0];
+            }
+        }
+        // Linux/Mac
+        else {
+            $output = shell_exec('hostname -I 2>/dev/null');
+            if (preg_match('/\d+\.\d+\.\d+\.\d+/', $output, $matches)) {
+                $localIP = trim($matches[0]);
+            }
+        }
+    }
+    
+    return $localIP;
+}
 ?>
 
 <!DOCTYPE html>
@@ -127,6 +157,23 @@ if (!isset($_SESSION['wifi_name'])) {
                     <div class="status-card">
                         <h4><i class="fas fa-users me-2"></i>Registered Users</h4>
                         <p class="mb-0" id="userCount">Loading...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Arduino Code Status -->
+            <div class="row mt-4">
+                <div class="col-md-6 mx-auto">
+                    <div class="card feature-card">
+                        <div class="card-body text-center">
+                            <h5><i class="fas fa-microchip me-2"></i>Arduino Code Status</h5>
+                            <p class="mb-3">Current WiFi: <strong><?php echo htmlspecialchars($_SESSION['wifi_name']); ?></strong></p>
+                            <p class="mb-3">Server IP: <strong><?php echo getServerIP(); ?></strong></p>
+                            <a href="smart_door_lock_configured.ino" download class="btn btn-primary">
+                                <i class="fas fa-download me-2"></i>Download Updated Arduino Code
+                            </a>
+                            <small class="d-block mt-2 text-muted">This file is automatically updated when you log in</small>
+                        </div>
                     </div>
                 </div>
             </div>

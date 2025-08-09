@@ -17,7 +17,9 @@
 - Required libraries (see Arduino code for includes)
 -link:
 -https://github.com/johnrickman/LiquidCrystal_I2C
--
+-https://github.com/miguelbalboa/rfid
+-put in preferences - http://arduino.esp8266.com/stable/package_esp8266com_index.json
+
 
 ## Wiring Diagram
 

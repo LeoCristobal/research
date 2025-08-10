@@ -31,24 +31,24 @@ Power:
 - GND → Common Ground
 
 RFID-RC522:
-- 3.3V → VCC
+- 3.3V → 3.3V
 - GND → GND
-- D2 (GPIO4) → SDA/SS
-- D1 (GPIO5) → SCK
-- D6 (GPIO12) → MOSI
-- D7 (GPIO13) → MISO
-- D5 (GPIO14) → RST
+- D8 (GPIO15) → SDA/SS
+- D5 (GPIO14) → SCK
+- D7 (GPIO13) → MOSI
+- D6 (GPIO12) → MISO
+- D0 (GPIO16) → RST
 
 I2C LCD Display:
-- 3.3V → VCC
 - GND → GND
-- D3 (GPIO0) → SDA
-- D5 (GPIO14) → SCL
+- VCC → 5V
+- D2 (GPIO4) → SDA
+- D1 (GPIO5) → SCL
 
 Servo Motor:
-- 5V → VCC (from power supply)
-- GND → Common Ground
-- D4 (GPIO2) → Signal (PWM)
+- GND → GND
+- 5V → 5V
+- D3 (GPIO0) → Signal (yellow wire)
 
 Breadboard Connections:
 - Connect all GND pins to common ground
@@ -60,14 +60,17 @@ Breadboard Connections:
 
 ### NodeMCU ESP8266 Pin Mapping
 ```
-GPIO0  → D3  → LCD SDA
-GPIO2  → D4  → Servo Signal
-GPIO4  → D2  → RFID SDA/SS
-GPIO5  → D1  → RFID SCK
-GPIO12 → D6  → RFID MOSI
-GPIO13 → D7  → RFID MISO
-GPIO14 → D5  → LCD SCL
-GPIO15 → D8  → Not used (boot mode)
+GPIO0  → D3  → Servo Signal (yellow wire)
+GPIO1  → TX  → Not used
+GPIO2  → D4  → Not used
+GPIO3  → RX  → Not used
+GPIO4  → D2  → LCD SDA
+GPIO5  → D1  → LCD SCL
+GPIO12 → D6  → RFID MISO
+GPIO13 → D7  → RFID MOSI
+GPIO14 → D5  → RFID SCK
+GPIO15 → D8  → RFID SDA/SS
+GPIO16 → D0  → RFID RST
 ```
 
 ### Power Distribution

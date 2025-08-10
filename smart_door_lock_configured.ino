@@ -17,17 +17,17 @@
 const char* ssid = "T-Attack";      // Change this to your WiFi name
 const char* password = "likeaboss08"; // Change this to your WiFi password
 
-// Hardware Pins
-#define RST_PIN         5     // D1
-#define SS_PIN          4     // D2
-#define SERVO_PIN       2     // D4
-#define LCD_SDA         0     // D3
-#define LCD_SCL         14    // D5
+// Hardware Pins (based on safe wiring)
+#define RST_PIN         16    // D0
+#define SS_PIN          15    // D8
+#define SERVO_PIN       0     // D3
+#define LCD_SDA         4     // D2
+#define LCD_SCL         5     // D1
 
 // Web Server Configuration
-const char* host = "::1"; // Change this to your computer's IP address
+const char* host = "192.168.254.184"; // Change this to your computer's IP address
 const int httpPort = 80;
-const char* baseUrl = "/v2"; // Change this to match your project folder
+const char* baseUrl = "/research"; // Change this to match your project folder
 
 // Objects
 MFRC522 mfrc522(SS_PIN, RST_PIN);
@@ -55,7 +55,7 @@ void setup() {
   doorServo.attach(SERVO_PIN);
   doorServo.write(0); // Lock door initially
   
-  // Initialize LCD
+  // LCD Boot message
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Smart Door Lock");
@@ -70,7 +70,7 @@ void setup() {
     delay(500);
     Serial.print(".");
     lcd.setCursor(0, 1);
-    lcd.print("WiFi: Connecting");
+    lcd.print("WiFi: Connecting ");
   }
   
   Serial.println("");
@@ -78,25 +78,15 @@ void setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
   
-  // Display ready message
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("System Ready!");
-  lcd.setCursor(0, 1);
-  lcd.print("Tap RFID Card");
-  
-  delay(2000);
-  
-  // Show WiFi info
+  // Display WiFi info
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("WiFi: " + WiFi.SSID());
   lcd.setCursor(0, 1);
   lcd.print("IP: " + WiFi.localIP().toString());
-  
   delay(3000);
-  
-  // Show ready message again
+
+  // Ready message
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("System Ready!");
@@ -105,185 +95,129 @@ void setup() {
 }
 
 void loop() {
-  // Check WiFi connection
+  // Reconnect WiFi if disconnected
   if (WiFi.status() != WL_CONNECTED) {
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("WiFi Disconnected");
     lcd.setCursor(0, 1);
     lcd.print("Reconnecting...");
-    
     WiFi.reconnect();
     delay(5000);
     return;
   }
-  
-  // Check if new RFID card is present
+
+  // RFID check
   if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
     String uid = "";
-    
-    // Read UID
     for (byte i = 0; i < mfrc522.uid.size; i++) {
       uid += String(mfrc522.uid.uidByte[i], HEX);
     }
     uid.toUpperCase();
-    
-    // Check if it's a new card
+
     if (uid != lastUID) {
       lastUID = uid;
       Serial.println("Card detected: " + uid);
-      
-      // Display card detected message
       lcd.clear();
       lcd.setCursor(0, 0);
       lcd.print("Card Detected:");
       lcd.setCursor(0, 1);
       lcd.print(uid);
-      
       delay(1000);
-      
-      // Authenticate card with web server
+
       if (authenticateCard(uid)) {
-        // Access granted
         lcd.clear();
         lcd.setCursor(0, 0);
         lcd.print("Access Granted!");
         lcd.setCursor(0, 1);
         lcd.print("Door Opening...");
-        
         unlockDoor();
         logAccess(uid, "Granted", "Opened");
-        
         delay(3000);
-        
-        // Lock door after delay
         lockDoor();
         logAccess(uid, "Granted", "Closed");
-        
       } else {
-        // Access denied
         lcd.clear();
         lcd.setCursor(0, 0);
         lcd.print("Invalid Card!");
         lcd.setCursor(0, 1);
         lcd.print("Access Denied");
-        
         logAccess(uid, "Denied", "Closed");
-        
         delay(3000);
       }
-      
-      // Show ready message
+
       lcd.clear();
       lcd.setCursor(0, 0);
       lcd.print("System Ready!");
       lcd.setCursor(0, 1);
       lcd.print("Tap RFID Card");
     }
-    
-    // Halt PICC
+
     mfrc522.PICC_HaltA();
-    // Stop encryption on PCD
     mfrc522.PCD_StopCrypto1();
   }
-  
   delay(100);
 }
 
 bool authenticateCard(String uid) {
   WiFiClient client;
   HTTPClient http;
-  
   String url = String("http://") + host + baseUrl + "/check_access.php?uid=" + uid;
-  
   Serial.println("Checking access for UID: " + uid);
   Serial.println("URL: " + url);
-  
+
   if (http.begin(client, url)) {
     int httpCode = http.GET();
-    
     if (httpCode > 0) {
       String payload = http.getString();
       Serial.println("HTTP Response: " + payload);
-      
-      // Check if access is granted
       if (payload.indexOf("GRANTED") != -1) {
         return true;
       }
     } else {
       Serial.println("HTTP request failed");
     }
-    
     http.end();
   }
-  
   return false;
 }
 
 void unlockDoor() {
   Serial.println("Unlocking door...");
   doorLocked = false;
-  
-  // Move servo to unlock position
   for (int angle = 0; angle <= 90; angle += 5) {
     doorServo.write(angle);
     delay(50);
   }
-  
   Serial.println("Door unlocked");
 }
 
 void lockDoor() {
   Serial.println("Locking door...");
   doorLocked = true;
-  
-  // Move servo to lock position
   for (int angle = 90; angle >= 0; angle -= 5) {
     doorServo.write(angle);
     delay(50);
   }
-  
   Serial.println("Door locked");
 }
 
 void logAccess(String uid, String accessType, String doorStatus) {
   WiFiClient client;
   HTTPClient http;
-  
   String url = String("http://") + host + baseUrl + "/log_access.php";
   String postData = "uid=" + uid + "&access_type=" + accessType + "&door_status=" + doorStatus;
-  
   Serial.println("Logging access: " + postData);
-  
+
   if (http.begin(client, url)) {
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-    
     int httpCode = http.POST(postData);
-    
     if (httpCode > 0) {
       String payload = http.getString();
       Serial.println("Log response: " + payload);
     } else {
       Serial.println("Log request failed");
     }
-    
     http.end();
   }
-}
-
-// Function to update WiFi credentials from web interface
-void updateWiFiCredentials(String newSSID, String newPassword) {
-  // This function can be called via web interface to update WiFi settings
-  // For security, implement proper authentication before allowing updates
-  
-  WiFi.disconnect();
-  WiFi.begin(newSSID.c_str(), newPassword.c_str());
-  
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("WiFi Updated");
-  lcd.setCursor(0, 1);
-  lcd.print("Reconnecting...");
-  
-  delay(5000);
 }

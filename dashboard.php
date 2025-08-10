@@ -161,22 +161,7 @@ function getServerIP() {
                 </div>
             </div>
             
-            <!-- Arduino Code Status -->
-            <div class="row mt-4">
-                <div class="col-md-6 mx-auto">
-                    <div class="card feature-card">
-                        <div class="card-body text-center">
-                            <h5><i class="fas fa-microchip me-2"></i>Arduino Code Status</h5>
-                            <p class="mb-3">Current WiFi: <strong><?php echo htmlspecialchars($_SESSION['wifi_name']); ?></strong></p>
-                            <p class="mb-3">Server IP: <strong><?php echo getServerIP(); ?></strong></p>
-                            <a href="smart_door_lock_configured.ino" download class="btn btn-primary">
-                                <i class="fas fa-download me-2"></i>Download Updated Arduino Code
-                            </a>
-                            <small class="d-block mt-2 text-muted">This file is automatically updated when you log in</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
     </section>
 

@@ -91,7 +91,7 @@
                   <?php
                    include 'database.php';
                    $pdo = Database::connect();
-                   $sql = 'SELECT * FROM table_the_iot_projects ORDER BY name ASC';
+                   $sql = 'SELECT * FROM user_info ORDER BY name ASC';
                    foreach ($pdo->query($sql) as $row) {
                             echo '<tr>';
                             echo '<td>'. $row['name'] . '</td>';

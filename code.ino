@@ -134,7 +134,7 @@ int getid() {
     readcard[i]=mfrc522.uid.uidByte[i]; //storing the UID of the tag in readcard
     array_to_string(readcard, 4, str);
     StrUID = str;
-  }
+  }   
   mfrc522.PICC_HaltA();
   return 1;
 }

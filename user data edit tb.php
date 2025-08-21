@@ -16,7 +16,7 @@
          
         $pdo = Database::connect();
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$sql = "UPDATE table_the_iot_projects  set name = ?, gender =?, email =?, mobile =? WHERE id = ?";
+		$sql = "UPDATE user_info  set name = ?, gender =?, email =?, mobile =? WHERE id = ?";
 		$q = $pdo->prepare($sql);
 		$q->execute(array($name,$gender,$email,$mobile,$id));
 		Database::disconnect();
@@ -41,7 +41,7 @@ user data delete page
         // delete data
         $pdo = Database::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "DELETE FROM table_the_iot_projects  WHERE id = ?";
+        $sql = "DELETE FROM user_info  WHERE id = ?";
         $q = $pdo->prepare($sql);
         $q->execute(array($id));
         Database::disconnect();

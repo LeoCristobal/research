@@ -7,7 +7,7 @@
      
     $pdo = Database::connect();
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$sql = "SELECT * FROM table_the_iot_projects where id = ?";
+	$sql = "SELECT * FROM user_info where id = ?";
 	$q = $pdo->prepare($sql);
 	$q->execute(array($id));
 	$data = $q->fetch(PDO::FETCH_ASSOC);

@@ -13,7 +13,7 @@
 		// insert data
         $pdo = Database::connect();
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$sql = "INSERT INTO table_the_iot_projects (name,id,gender,email,mobile) values(?, ?, ?, ?, ?)";
+		$sql = "INSERT INTO user_info (name,id,gender,email,mobile) values(?, ?, ?, ?, ?)";
 		$q = $pdo->prepare($sql);
 		$q->execute(array($name,$id,$gender,$email,$mobile));
 		Database::disconnect();

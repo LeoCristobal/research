@@ -19,9 +19,7 @@ CREATE TABLE `table_the_iot_projects` (
 
 INSERT INTO `table_the_iot_projects` (`name`, `id`, `gender`, `email`, `mobile`) VALUES
 ('Leo', '436AB1E4', 'Male', 'leocristobal108@gmail.com', '9635633318'),
-('John', '769174F8', 'Male', 'john@email.com', '23456789'),
-('Thvhm,b', '81A3DC79', 'Female', 'jgkhkkmanjil@gmail.com', '45768767564'),
-('The IoT Projects', '866080F8', 'Male', 'ask.theiotprojects@gmail.com', '9800988978');
+('Azumi', '769174F8', 'Female', 'azumi@email.com', '23456789');
 
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

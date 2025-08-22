@@ -1,8 +1,10 @@
 # Use official PHP + Apache image
 FROM php:8.2-apache
 
-# Install MySQL extensions
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+# Install PostgreSQL PDO driver
+RUN apt-get update \
+    && apt-get install -y libpq-dev \
+    && docker-php-ext-install pdo_pgsql pgsql
 
 # Copy all project files into Apache web root
 COPY . /var/www/html/
@@ -11,7 +13,7 @@ COPY . /var/www/html/
 WORKDIR /var/www/html
 
 # Tell Apache to use home.php as the default page
-RUN echo "DirectoryIndex home.php" > /etc/apache2/conf-available/directoryindex.conf \
+RUN echo "DirectoryIndex index.php" > /etc/apache2/conf-available/directoryindex.conf \
     && a2enconf directoryindex
 
 # Expose port 80 (Render will map this automatically)

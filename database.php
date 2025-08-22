@@ -14,29 +14,27 @@ class Database
      
     public static function connect()
     {
-       // One connection through whole application
-       if ( null == self::$cont )
-       {     
-        try
-        {
-          self::$dbName = getenv("MYSQL_DATABASE") ?: 'nodemcu_rfid_iot_projects';
-          self::$dbHost = getenv("MYSQL_HOST") ?: 'localhost';
-          self::$dbUsername = getenv("MYSQL_USER") ?: 'root';
-          self::$dbUserPassword = getenv("MYSQL_PASSWORD") ?: '';
+        if (null == self::$cont) {     
+            try {
+                // Load from environment variables (Render -> Environment)
+                self::$dbName        = getenv("PGDATABASE") ?: 'nodemcu_rfid_iot_projects';
+                self::$dbHost        = getenv("PGHOST") ?: 'localhost';
+                self::$dbUsername    = getenv("PGUSER") ?: 'root';
+                self::$dbUserPassword = getenv("PGPASSWORD") ?: '';
 
-          self::$cont = new PDO(
-              "mysql:host=".self::$dbHost.";dbname=".self::$dbName,
-              self::$dbUsername,
-              self::$dbUserPassword
-          ); 
-          self::$cont->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $dbPort = getenv("PGPORT") ?: "5432";
+
+                self::$cont = new PDO(
+                    "pgsql:host=" . self::$dbHost . ";port=" . $dbPort . ";dbname=" . self::$dbName,
+                    self::$dbUsername,
+                    self::$dbUserPassword
+                );
+                self::$cont->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } catch (PDOException $e) {
+                die("Database connection failed: " . $e->getMessage());
+            }
         }
-        catch(PDOException $e)
-        {
-          die("Database connection failed: " . $e->getMessage()); 
-        }
-       }
-       return self::$cont;
+        return self::$cont;
     }
      
     public static function disconnect()

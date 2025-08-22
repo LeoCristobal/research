@@ -9,7 +9,7 @@
 		private static $cont  = null;
 		 
 		public function __construct() {
-			die('Init function is not allowed');
+			die('Init function is not allowed');	
 		}
 		 
 		public static function connect()

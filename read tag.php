@@ -1,6 +1,6 @@
 <?php
 	$Write="<?php $" . "UIDresult=''; " . "echo $" . "UIDresult;" . " ?>";
-	file_put_contents('UIDContainer.php',$Write);
+	file_put_contents('/tmp/UIDContainer.php',$Write);
 ?>
 
 <!DOCTYPE html>
@@ -13,9 +13,9 @@
 		<script src="jquery.min.js"></script>
 		<script>
 			$(document).ready(function(){
-				 $("#getUID").load("UIDContainer.php");
+				 $("#getUID").load("/tmp/UIDContainer.php");
 				setInterval(function() {
-					$("#getUID").load("UIDContainer.php");	
+					$("#getUID").load("/tmp/UIDContainer.php");	
 				}, 500);
 			});
 		</script>

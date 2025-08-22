@@ -1,6 +1,6 @@
 <?php
 	$Write="<?php $" . "UIDresult=''; " . "echo $" . "UIDresult;" . " ?>";
-	file_put_contents('UIDContainer.php',$Write);
+	file_put_contents('/tmp/UIDContainer.php',$Write);
 ?>
 
 <!DOCTYPE html>

@@ -70,7 +70,7 @@
 	<body>
 		<h2 align="center">NodeMCU V3 ESP8266 / ESP12E with MYSQL Database</h2>
 		<ul class="topnav">
-			<li><a href="home.php">Home</a></li>
+			<li><a href="index.php">Home</a></li>
 			<li><a href="user data.php">User Data</a></li>
 			<li><a href="registration.php">Registration</a></li>
 			<li><a class="active" href="read tag.php">Read Tag ID</a></li>

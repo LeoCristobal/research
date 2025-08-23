@@ -1,10 +1,18 @@
 <?php
-if (isset($_POST['UIDresult']) && !empty($_POST['UIDresult'])) {
-    $UIDresult = $_POST['UIDresult'];
-    // save latest UID sa file
-    file_put_contents('/tmp/UIDContainer.txt', $UIDresult);
-    echo "Received UID: " . $UIDresult;
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['uid'])) {
+        $uid = $_POST['uid'];
+
+        // isulat sa UIDContainer.php
+        $file = fopen("UIDContainer.php", "w") or die("Unable to open file!");
+        fwrite($file, "<?php $" . "uid='" . $uid . "'; ?>");
+        fclose($file);
+
+        echo "Received UID: " . $uid;
+    } else {
+        echo "No UID received";
+    }
 } else {
-    echo "No UID received";
+    echo "Invalid request method";
 }
 ?>

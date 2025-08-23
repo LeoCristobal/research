@@ -1,6 +1,12 @@
 <?php
-	$Write="<?php $" . "UIDresult=''; " . "echo $" . "UIDresult;" . " ?>";
-	file_put_contents('/tmp/UIDContainer.php',$Write);
+require 'database.php';
+$pdo = Database::connect();
+
+// Get last UID na may "Pending" info
+$stmt = $pdo->query("SELECT * FROM user_info WHERE name='Pending' ORDER BY user_id DESC LIMIT 1");
+$pending = $stmt->fetch(PDO::FETCH_ASSOC);
+
+Database::disconnect();
 ?>
 
 <!DOCTYPE html>
@@ -13,13 +19,14 @@
 		<script src="js/bootstrap.min.js"></script>
 		<script src="jquery.min.js"></script>
 		<script>
-			$(document).ready(function(){
-				 $("#getUID").load("/tmp/UIDContainer.php");
-				setInterval(function() {
-					$("#getUID").load("/tmp/UIDContainer.php");
-				}, 500);
-			});
+		$(document).ready(function(){
+			$("#getUID").load("/tmp/UIDContainer.txt");   // read plain text file
+			setInterval(function() {
+				$("#getUID").load("/tmp/UIDContainer.txt");
+			}, 500);
+		});
 		</script>
+
 		
 		<style>
 		html {

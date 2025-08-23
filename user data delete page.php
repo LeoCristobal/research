@@ -24,7 +24,7 @@ if (!empty($_POST)) {
         Database::disconnect();
 
         // Redirect to user_data.php (no spaces)
-        header("Location: user_data.php");
+        header("Location: user data.php");
         exit;
     } catch (PDOException $e) {
         die("Error deleting data: " . $e->getMessage());

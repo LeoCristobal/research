@@ -1,18 +1,34 @@
 <?php
-    require 'database.php';
-    $id = null;
-    if ( !empty($_GET['id'])) {
-        $id = $_REQUEST['id'];
+require 'database.php';
+
+$id = null;
+if (!empty($_GET['id'])) {
+    $id = $_GET['id'];
+}
+
+$data = null;
+
+if ($id !== null) {
+    try {
+        $pdo = Database::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // Quote "id" for PostgreSQL
+        $sql = 'SELECT * FROM user_info WHERE "id" = ?';
+        $q = $pdo->prepare($sql);
+        $q->execute([$id]);
+
+        $data = $q->fetch(PDO::FETCH_ASSOC);
+
+        Database::disconnect();
+    } catch (PDOException $e) {
+        die("Error fetching data: " . $e->getMessage());
     }
-     
-    $pdo = Database::connect();
-	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$sql = "SELECT * FROM user_info where id = ?";
-	$q = $pdo->prepare($sql);
-	$q->execute(array($id));
-	$data = $q->fetch(PDO::FETCH_ASSOC);
-	Database::disconnect();
+} else {
+    $data = null;
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

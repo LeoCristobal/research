@@ -19,7 +19,7 @@ if ($id !== null) {
         $data = $q->fetch(PDO::FETCH_ASSOC);
 
         Database::disconnect();
-		header("Location: user_data.php");
+		header("Location: user data.php");
         exit;
     } catch (PDOException $e) {
         die("Error fetching data: " . $e->getMessage());

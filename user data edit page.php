@@ -12,7 +12,7 @@ if ($id !== null) {
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // Quote "id" because it's a reserved keyword
-        $sql = 'SELECT * FROM table_the_iot_projects WHERE "id" = ?';
+        $sql = 'SELECT * FROM user_info WHERE "id" = ?';
         $q = $pdo->prepare($sql);
         $q->execute(array($id));
 

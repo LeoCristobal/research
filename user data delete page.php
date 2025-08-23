@@ -17,7 +17,7 @@ if (!empty($_POST)) {
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // Quote "id" for PostgreSQL
-        $sql = 'DELETE FROM table_the_iot_projects WHERE "id" = ?';
+        $sql = 'DELETE FROM user_info WHERE "id" = ?';
         $q = $pdo->prepare($sql);
         $q->execute(array($id));
 

@@ -1,30 +1,52 @@
 <?php
-    require 'database.php';
-    $id = null;
-    if ( !empty($_GET['id'])) {
-        $id = $_REQUEST['id'];
+require 'database.php';
+
+$id = null;
+if (!empty($_GET['id'])) {
+    $id = $_GET['id'];
+}
+
+$data = null;
+$msg = null;
+
+if ($id !== null) {
+    try {
+        $pdo = Database::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // Quote "id" for PostgreSQL
+        $sql = 'SELECT * FROM user_info WHERE "id" = ?';
+        $q = $pdo->prepare($sql);
+        $q->execute(array($id));
+
+        $data = $q->fetch(PDO::FETCH_ASSOC);
+        Database::disconnect();
+
+        if (!$data || $data['name'] === null) {
+            $msg = "The ID of your Card / KeyChain is not registered !!!";
+            $data = [
+                'id' => $id,
+                'name' => "--------",
+                'gender' => "--------",
+                'email' => "--------",
+                'mobile' => "--------"
+            ];
+        }
+    } catch (PDOException $e) {
+        die("Error fetching data: " . $e->getMessage());
     }
-     
-    $pdo = Database::connect();
-	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$sql = "SELECT * FROM table_the_iot_projects where id = ?";
-	$q = $pdo->prepare($sql);
-	$q->execute(array($id));
-	$data = $q->fetch(PDO::FETCH_ASSOC);
-	Database::disconnect();
-	
-	$msg = null;
-	if (null==$data['name']) {
-		$msg = "The ID of your Card / KeyChain is not registered !!!";
-		$data['id']=$id;
-		$data['name']="--------";
-		$data['gender']="--------";
-		$data['email']="--------";
-		$data['mobile']="--------";
-	} else {
-		$msg = null;
-	}
+} else {
+    $msg = "No ID provided.";
+    $data = [
+        'id' => null,
+        'name' => "--------",
+        'gender' => "--------",
+        'email' => "--------",
+        'mobile' => "--------"
+    ];
+}
 ?>
+
  
 <!DOCTYPE html>
 <html lang="en">

@@ -1,33 +1,35 @@
 <?php
 require 'database.php';
 
-$id = null;
-if (!empty($_GET['id'])) {
-    $id = $_GET['id'];
-}
+if (!empty($_POST)) {
+    $id     = $_POST['id'];
+    $name   = $_POST['name'];
+    $gender = $_POST['gender'];
+    $email  = $_POST['email'];
+    $mobile = $_POST['mobile'];
 
-$data = null;
-
-if ($id !== null) {
     try {
         $pdo = Database::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Quote "id" for PostgreSQL
-        $sql = 'SELECT * FROM user_info WHERE "id" = ?';
+        $sql = 'UPDATE user_info SET name = ?, gender = ?, email = ?, mobile = ? WHERE "id" = ?';
         $q = $pdo->prepare($sql);
-        $q->execute([$id]);
-
-        $data = $q->fetch(PDO::FETCH_ASSOC);
+        $q->execute([$name, $gender, $email, $mobile, $id]);
 
         Database::disconnect();
+
+        // Redirect to user data page immediately after update
+        header("Location: user data.php");
+        exit;
+
     } catch (PDOException $e) {
-        die("Error fetching data: " . $e->getMessage());
+        die("Error updating data: " . $e->getMessage());
     }
 } else {
-    $data = null;
+    die("No POST data received.");
 }
 ?>
+
 
 
 <!DOCTYPE html>

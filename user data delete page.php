@@ -1,26 +1,37 @@
 <?php
-    require 'database.php';
-    $id = 0;
-     
-    if ( !empty($_GET['id'])) {
-        $id = $_REQUEST['id'];
-    }
-     
-    if ( !empty($_POST)) {
-        // keep track post values
-        $id = $_POST['id'];
-         
+require 'database.php';
+
+$id = 0;
+
+if (!empty($_GET['id'])) {
+    $id = $_GET['id'];
+}
+
+if (!empty($_POST)) {
+    // keep track post values
+    $id = $_POST['id'];
+
+    try {
         // delete data
         $pdo = Database::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "DELETE FROM table_the_iot_projects  WHERE id = ?";
+
+        // Quote "id" for PostgreSQL
+        $sql = 'DELETE FROM table_the_iot_projects WHERE "id" = ?';
         $q = $pdo->prepare($sql);
         $q->execute(array($id));
+
         Database::disconnect();
-        header("Location: user data.php");
-         
+
+        // Redirect to user_data.php (no spaces)
+        header("Location: user_data.php");
+        exit;
+    } catch (PDOException $e) {
+        die("Error deleting data: " . $e->getMessage());
     }
+}
 ?>
+
  
 <!DOCTYPE html>
 <html lang="en">

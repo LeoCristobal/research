@@ -63,7 +63,7 @@ file_put_contents('/tmp/UIDContainer.php', $Write);
 <body>
     <h2>NodeMCU V3 ESP8266 / ESP12E with PostgreSQL Database</h2>
     <ul class="topnav">
-        <li><a href="indexphp">Home</a></li>
+        <li><a href="index.php">Home</a></li>
         <li><a class="active" href="user data.php">User Data</a></li>
         <li><a href="registration.php">Registration</a></li>
         <li><a href="read tag.php">Read Tag ID</a></li>

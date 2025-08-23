@@ -6,28 +6,30 @@ if (!empty($_GET['id'])) {
     $id = $_GET['id'];
 }
 
+$data = null;
+
 if ($id !== null) {
     try {
         $pdo = Database::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Quote "id" because it's a reserved keyword
+        // PostgreSQL: quote "id" because it's a reserved keyword
         $sql = 'SELECT * FROM user_info WHERE "id" = ?';
         $q = $pdo->prepare($sql);
-        $q->execute(array($id));
+        $q->execute([$id]);
 
         $data = $q->fetch(PDO::FETCH_ASSOC);
 
         Database::disconnect();
-		header("Location: user data.php");
-        exit;
+
     } catch (PDOException $e) {
         die("Error fetching data: " . $e->getMessage());
     }
 } else {
-    $data = null;
+    die("No ID provided.");
 }
 ?>
+
 
 
 <!DOCTYPE html>

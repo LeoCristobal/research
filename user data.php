@@ -67,6 +67,7 @@ file_put_contents('UIDContainer.php', $Write);
         <li><a class="active" href="user data.php">User Data</a></li>
         <li><a href="registration.php">Registration</a></li>
         <li><a href="read tag.php">Read Tag ID</a></li>
+        <li><a href="history.php">History</a></li>
     </ul>
     <br>
 

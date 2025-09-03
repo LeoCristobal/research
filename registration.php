@@ -74,6 +74,7 @@
 			<li><a href="user data.php">User Data</a></li>
 			<li><a class="active" href="registration.php">Registration</a></li>
 			<li><a href="read tag.php">Read Tag ID</a></li>
+			<li><a href="history.php">History</a></li>
 		</ul>
 
 		<div class="container">

@@ -1,7 +1,8 @@
 -- Database: nodemcu_rfid_iot_projects
 
--- Drop table if it exists (optional, for clean import)
+-- Drop tables if they exist (optional, for clean import)
 DROP TABLE IF EXISTS user_info;
+DROP TABLE IF EXISTS access_log;
 
 -- Table structure for table `user_info`
 CREATE TABLE user_info (

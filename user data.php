@@ -1,7 +1,7 @@
 <?php
 // Save empty UID container in a safe writable directory
 $Write = "<?php $" . "UIDresult=''; " . "echo $" . "UIDresult;" . " ?>";
-file_put_contents('/tmp/UIDContainer.php', $Write);
+file_put_contents('UIDContainer.php', $Write);
 ?>
 
 <!DOCTYPE html>

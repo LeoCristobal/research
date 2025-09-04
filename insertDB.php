@@ -14,7 +14,7 @@ if (!empty($_POST)) {
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // Use double quotes for reserved keywords
-        $sql = 'INSERT INTO user_info (name, "id", gender, email, mobile) VALUES (?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO user_info (name, id, gender, email, mobile) VALUES (?, ?, ?, ?, ?)';
         $q = $pdo->prepare($sql);
         $q->execute(array($name, $id, $gender, $email, $mobile));
 

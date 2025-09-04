@@ -2,7 +2,11 @@
 	class Database
 	{
 		private static $dbName = 'nodemcu_rfid_iot_projects' ;
+<<<<<<< HEAD
 		private static $dbHost = 'localhost' ;
+
+		private static $dbHost = '127.0.0.1' ;
+
 		private static $dbUsername = 'root';
 		private static $dbUserPassword = '';
 		 

@@ -11,7 +11,7 @@ file_put_contents('UIDContainer.php', $Write);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <title>User Data : NodeMCU V3 ESP8266 / ESP12E with PostgreSQL Database</title>
+    <title>User Data : NodeMCU V3 ESP8266 / ESP12E with MySQL Database</title>
     <style>
         body { background: #f8fafc; }
         .navbar-brand { font-weight: bold; }
@@ -28,11 +28,10 @@ file_put_contents('UIDContainer.php', $Write);
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-        <li class="nav-item"><a class="nav-link active" href="user data.php">User Data</a></li>
+        <li class="nav-item"><a class="nav-link active" href="user_data.php">User Data</a></li>
         <li class="nav-item"><a class="nav-link" href="registration.php">Registration</a></li>
-        <li class="nav-item"><a class="nav-link" href="read tag.php">Read Tag ID</a></li>
+        <li class="nav-item"><a class="nav-link" href="read_tag.php">Read Tag ID</a></li>
         <li class="nav-item"><a class="nav-link" href="history.php">History</a></li>
-
       </ul>
     </div>
   </div>
@@ -66,8 +65,8 @@ file_put_contents('UIDContainer.php', $Write);
               echo '<td>' . htmlspecialchars($row['email']) . '</td>';
               echo '<td>' . htmlspecialchars($row['mobile']) . '</td>';
               echo '<td>';
-              echo '<a class="btn btn-success btn-sm me-2" href="user data edit page.php?id=' . urlencode($row['id']) . '">Edit</a>';
-              echo '<a class="btn btn-danger btn-sm" href="user data delete page.php?id=' . urlencode($row['id']) . '">Delete</a>';
+              echo '<a class="btn btn-success btn-sm me-2" href="user data edit page.php?user_id=' . urlencode($row['user_id']) . '">Edit</a>';
+              echo '<a class="btn btn-danger btn-sm" href="user data delete page.php?user_id=' . urlencode($row['user_id']) . '">Delete</a>';
               echo '</td>';
               echo '</tr>';
             }

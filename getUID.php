@@ -4,34 +4,33 @@ require 'database.php';
 if (isset($_POST["uid"])) {
     $UIDresult = $_POST["uid"];
 
-    // Save UID sa UIDContainer.php
-    $Write = "<?php $" . "UIDresult='" . $UIDresult . "'; " . "echo $" . "UIDresult;" . " ?>";
-    file_put_contents('UIDContainer.php', $Write);
-
-    // Connect sa DB
     $pdo = Database::connect();
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Check kung existing sa user_info table (id column)
+    // Check if UID exists
     $sql = "SELECT * FROM user_info WHERE id = ?";
     $q = $pdo->prepare($sql);
     $q->execute([$UIDresult]);
     $data = $q->fetch(PDO::FETCH_ASSOC);
 
-    // Log to access_log
+    // Determine action and user_id
     if ($data) {
-        // User found, log with user_id
-        $logSql = "INSERT INTO access_log (user_id, rfid_id, action) VALUES (?, ?, 'tap')";
-        $logQ = $pdo->prepare($logSql);
-        $logQ->execute([$data['user_id'], $UIDresult]);
-        echo "AUTHORIZED";
+        $action = "AUTHORIZED";
+        $user_id = $data['user_id'];
     } else {
-        // User not found, log with NULL user_id
-        $logSql = "INSERT INTO access_log (user_id, rfid_id, action) VALUES (NULL, ?, 'tap')";
-        $logQ = $pdo->prepare($logSql);
-        $logQ->execute([$UIDresult]);
-        echo "UNAUTHORIZED";
+        $action = "UNAUTHORIZED";
+        $user_id = null; // unknown user
     }
+
+    // ✅ Always log to access_log
+    $stmt = $pdo->prepare("INSERT INTO access_log (user_id, rfid_id, action) VALUES (?, ?, ?)");
+    $stmt->execute([$user_id, $UIDresult, $action]);
+
+    // Save UID to UIDContainer.php for registration.php
+    $write = "<?php $" . "UIDresult='" . $UIDresult . "'; echo $" . "UIDresult; ?>";
+    file_put_contents('UIDContainer.php', $write);
+
+    echo $action;
 
     Database::disconnect();
 } else {

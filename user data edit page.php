@@ -1,9 +1,10 @@
 <?php
 require 'database.php';
 
+// Get user_id from URL
 $id = null;
-if (!empty($_GET['id'])) {
-    $id = $_GET['id'];
+if (!empty($_GET['user_id'])) {
+    $id = $_GET['user_id'];
 }
 
 $data = null;
@@ -13,22 +14,23 @@ if ($id !== null) {
     try {
         $pdo = Database::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        // Use id without quotes for compatibility
-        $sql = 'SELECT * FROM user_info WHERE id = ?';
+        $sql = 'SELECT * FROM user_info WHERE user_id = ?';
         $q = $pdo->prepare($sql);
         $q->execute([$id]);
         $data = $q->fetch(PDO::FETCH_ASSOC);
         Database::disconnect();
+
         if (!$data) {
-            $error = 'User not found. (Debug: id=' . htmlspecialchars($id) . ')';
+            $error = 'User not found. (Debug: user_id=' . htmlspecialchars($id) . ')';
         }
     } catch (PDOException $e) {
         die("Error fetching data: " . $e->getMessage());
     }
 } else {
-    die("No ID provided.");
+    die("No user_id provided.");
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,7 +51,7 @@ if ($id !== null) {
     <?php if ($error): ?>
       <div class="alert alert-danger text-center"><?php echo $error; ?></div>
     <?php else: ?>
-    <form class="row g-3" action="user data edit tb.php?id=<?php echo $id?>" method="post">
+    <form class="row g-3" action="user data edit tb.php?user_id=<?php echo $id ?>" method="post">
       <div class="col-12">
         <label for="id" class="form-label">ID</label>
         <input name="id" type="text" class="form-control" value="<?php echo htmlspecialchars($data['id']); ?>" readonly>

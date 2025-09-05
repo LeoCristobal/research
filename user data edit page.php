@@ -7,21 +7,21 @@ if (!empty($_GET['id'])) {
 }
 
 $data = null;
+$error = null;
 
 if ($id !== null) {
     try {
         $pdo = Database::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        // PostgreSQL: quote "id" because it's a reserved keyword
-        $sql = 'SELECT * FROM user_info WHERE "id" = ?';
+        // Use id without quotes for compatibility
+        $sql = 'SELECT * FROM user_info WHERE id = ?';
         $q = $pdo->prepare($sql);
         $q->execute([$id]);
-
         $data = $q->fetch(PDO::FETCH_ASSOC);
-
         Database::disconnect();
-
+        if (!$data) {
+            $error = 'User not found. (Debug: id=' . htmlspecialchars($id) . ')';
+        }
     } catch (PDOException $e) {
         die("Error fetching data: " . $e->getMessage());
     }
@@ -29,130 +29,57 @@ if ($id !== null) {
     die("No ID provided.");
 }
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
-<html>
-	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta charset="utf-8">
-		<link href="css/bootstrap.min.css" rel="stylesheet">
-		<script src="js/bootstrap.min.js"></script>
-		
-		<style>
-		html {
-			font-family: Arial;
-			display: inline-block;
-			margin: 0px auto;
-		}
-		
-		textarea {
-			resize: none;
-		}
-
-		ul.topnav {
-			list-style-type: none;
-			margin: auto;
-			padding: 0;
-			overflow: hidden;
-			background-color: #4CAF50;
-			width: 70%;
-		}
-
-		ul.topnav li {float: left;}
-
-		ul.topnav li a {
-			display: block;
-			color: white;
-			text-align: center;
-			padding: 14px 16px;
-			text-decoration: none;
-		}
-
-		ul.topnav li a:hover:not(.active) {background-color: #3e8e41;}
-
-		ul.topnav li a.active {background-color: #333;}
-
-		ul.topnav li.right {float: right;}
-
-		@media screen and (max-width: 600px) {
-			ul.topnav li.right, 
-			ul.topnav li {float: none;}
-		}
-		</style>
-		
-		<title>Edit : NodeMCU V3 ESP8266 / ESP12E with MYSQL Database</title>
-		
-	</head>
-	
-	<body>
-
-		<h2 align="center">NodeMCU V3 ESP8266 / ESP12E with MYSQL Database</h2>
-		
-		<div class="container">
-     
-			<div class="center" style="margin: 0 auto; width:495px; border-style: solid; border-color: #f2f2f2;">
-				<div class="row">
-					<h3 align="center">Edit User Data</h3>
-					<p id="defaultGender" hidden><?php echo $data['gender'];?></p>
-				</div>
-		 
-				<form class="form-horizontal" action="user data edit tb.php?id=<?php echo $id?>" method="post">
-					<div class="control-group">
-						<label class="control-label">ID</label>
-						<div class="controls">
-							<input name="id" type="text"  placeholder="" value="<?php echo $data['id'];?>" readonly>
-						</div>
-					</div>
-					
-					<div class="control-group">
-						<label class="control-label">Name</label>
-						<div class="controls">
-							<input name="name" type="text"  placeholder="" value="<?php echo $data['name'];?>" required>
-						</div>
-					</div>
-					
-					<div class="control-group">
-						<label class="control-label">Gender</label>
-						<div class="controls">
-							<select name="gender" id="mySelect">
-								<option value="Male">Male</option>
-								<option value="Female">Female</option>
-							</select>
-						</div>
-					</div>
-					
-					<div class="control-group">
-						<label class="control-label">Email Address</label>
-						<div class="controls">
-							<input name="email" type="text" placeholder="" value="<?php echo $data['email'];?>" required>
-						</div>
-					</div>
-					
-					<div class="control-group">
-						<label class="control-label">Mobile Number</label>
-						<div class="controls">
-							<input name="mobile" type="text"  placeholder="" value="<?php echo $data['mobile'];?>" required>
-						</div>
-					</div>
-					
-					<div class="form-actions">
-						<button type="submit" class="btn btn-success">Update</button>
-						<a class="btn" href="user data.php">Back</a>
-					</div>
-				</form>
-			</div>               
-		</div> <!-- /container -->	
-		
-		<script>
-			var g = document.getElementById("defaultGender").innerHTML;
-			if(g=="Male") {
-				document.getElementById("mySelect").selectedIndex = "0";
-			} else {
-				document.getElementById("mySelect").selectedIndex = "1";
-			}
-		</script>
-	</body>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Edit : NodeMCU V3 ESP8266 / ESP12E with MYSQL Database</title>
+    <style>
+        body { background: #f8fafc; }
+        .main-card { max-width: 600px; margin: 40px auto; box-shadow: 0 2px 16px rgba(0,0,0,0.07); border-radius: 16px; }
+    </style>
+</head>
+<body>
+<div class="container">
+  <div class="card main-card p-4 mt-5">
+    <h2 class="text-center mb-3">Edit User Data</h2>
+    <?php if ($error): ?>
+      <div class="alert alert-danger text-center"><?php echo $error; ?></div>
+    <?php else: ?>
+    <form class="row g-3" action="user data edit tb.php?id=<?php echo $id?>" method="post">
+      <div class="col-12">
+        <label for="id" class="form-label">ID</label>
+        <input name="id" type="text" class="form-control" value="<?php echo htmlspecialchars($data['id']); ?>" readonly>
+      </div>
+      <div class="col-12">
+        <label for="name" class="form-label">Name</label>
+        <input name="name" type="text" class="form-control" value="<?php echo htmlspecialchars($data['name']); ?>" required>
+      </div>
+      <div class="col-12">
+        <label for="gender" class="form-label">Gender</label>
+        <select name="gender" id="mySelect" class="form-select">
+          <option value="Male" <?php if($data['gender']=="Male") echo 'selected'; ?>>Male</option>
+          <option value="Female" <?php if($data['gender']=="Female") echo 'selected'; ?>>Female</option>
+        </select>
+      </div>
+      <div class="col-12">
+        <label for="email" class="form-label">Email Address</label>
+        <input name="email" type="email" class="form-control" value="<?php echo htmlspecialchars($data['email']); ?>" required>
+      </div>
+      <div class="col-12">
+        <label for="mobile" class="form-label">Mobile Number</label>
+        <input name="mobile" type="text" class="form-control" value="<?php echo htmlspecialchars($data['mobile']); ?>" required>
+      </div>
+      <div class="col-12 text-center">
+        <button type="submit" class="btn btn-success">Update</button>
+        <a class="btn btn-secondary" href="user data.php">Back</a>
+      </div>
+    </form>
+    <?php endif; ?>
+  </div>
+</div>
+</body>
 </html>

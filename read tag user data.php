@@ -47,64 +47,33 @@ if ($id !== null) {
 }
 ?>
 
- 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-    <link   href="css/bootstrap.min.css" rel="stylesheet">
-    <script src="js/bootstrap.min.js"></script>
-	<style>
-		td.lf {
-			padding-left: 15px;
-			padding-top: 12px;
-			padding-bottom: 12px;
-		}
-	</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Read Tag User Data</title>
+    <style>
+        body { background: #f8fafc; }
+        .main-card { max-width: 500px; margin: 40px auto; box-shadow: 0 2px 16px rgba(0,0,0,0.07); border-radius: 16px; }
+    </style>
 </head>
- 
-	<body>	
-		<div>
-			<form>
-				<table  width="452" border="1" bordercolor="#10a0c5" align="center"  cellpadding="0" cellspacing="1"  bgcolor="#000" style="padding: 2px">
-					<tr>
-						<td  height="40" align="center"  bgcolor="#10a0c5"><font  color="#FFFFFF">
-						<b>User Data</b></font></td>
-					</tr>
-					<tr>
-						<td bgcolor="#f9f9f9">
-							<table width="452"  border="0" align="center" cellpadding="5"  cellspacing="0">
-								<tr>
-									<td width="113" align="left" class="lf">ID</td>
-									<td style="font-weight:bold">:</td>
-									<td align="left"><?php echo $data['id'];?></td>
-								</tr>
-								<tr bgcolor="#f2f2f2">
-									<td align="left" class="lf">Name</td>
-									<td style="font-weight:bold">:</td>
-									<td align="left"><?php echo $data['name'];?></td>
-								</tr>
-								<tr>
-									<td align="left" class="lf">Gender</td>
-									<td style="font-weight:bold">:</td>
-									<td align="left"><?php echo $data['gender'];?></td>
-								</tr>
-								<tr bgcolor="#f2f2f2">
-									<td align="left" class="lf">Email</td>
-									<td style="font-weight:bold">:</td>
-									<td align="left"><?php echo $data['email'];?></td>
-								</tr>
-								<tr>
-									<td align="left" class="lf">Mobile Number</td>
-									<td style="font-weight:bold">:</td>
-									<td align="left"><?php echo $data['mobile'];?></td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</table>
-			</form>
-		</div>
-		<p style="color:red;"><?php echo $msg;?></p>
-	</body>
+<body>
+<div class="container">
+  <div class="card main-card p-4 mt-5">
+    <h2 class="text-center mb-3">RFID Tag Details</h2>
+    <div class="alert alert-info text-center mb-4">This page displays the details of the RFID tag you tapped. If the tag is registered, user details will be shown below.</div>
+    <table class="table table-bordered">
+      <tr><td>ID</td><td><?php echo $data['id'];?></td></tr>
+      <tr><td>Name</td><td><?php echo $data['name'];?></td></tr>
+      <tr><td>Gender</td><td><?php echo $data['gender'];?></td></tr>
+      <tr><td>Email</td><td><?php echo $data['email'];?></td></tr>
+      <tr><td>Mobile Number</td><td><?php echo $data['mobile'];?></td></tr>
+    </table>
+    <?php if ($msg) { echo '<div class="alert alert-warning text-center">' . $msg . '</div>'; } ?>
+  </div>
+</div>
+</body>
 </html>

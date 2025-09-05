@@ -5,71 +5,43 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<html>
-	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta charset="utf-8">
-		<link href="css/bootstrap.min.css" rel="stylesheet">
-		<script src="js/bootstrap.min.js"></script>
-		<style>
-		html {
-			font-family: Arial;
-			display: inline-block;
-			margin: 0px auto;
-			text-align: center;
-		}
-
-		ul.topnav {
-			list-style-type: none;
-			margin: auto;
-			padding: 0;
-			overflow: hidden;
-			background-color: #4CAF50;
-			width: 70%;
-		}
-
-		ul.topnav li {float: left;}
-
-		ul.topnav li a {
-			display: block;
-			color: white;
-			text-align: center;
-			padding: 14px 16px;
-			text-decoration: none;
-		}
-
-		ul.topnav li a:hover:not(.active) {background-color: #3e8e41;}
-
-		ul.topnav li a.active {background-color: #333;}
-
-		ul.topnav li.right {float: right;}
-
-		@media screen and (max-width: 600px) {
-			ul.topnav li.right, 
-			ul.topnav li {float: none;}
-		}
-		
-		img {
-			display: block;
-			margin-left: auto;
-			margin-right: auto;
-		}
-		</style>
-		
-		<title>Home : NodeMCU V3 ESP8266 / ESP12E with MYSQL Database</title>
-	</head>
-	
-	<body>
-		<h2>NodeMCU V3 ESP8266 / ESP12E with MYSQL Database</h2>
-		<ul class="topnav">
-			<li><a class="active">Home</a></li>
-			<li><a href="user data.php">User Data</a></li>
-			<li><a href="registration.php">Registration</a></li>
-			<li><a href="read tag.php">Read Tag ID</a></li>
-		</ul>
-		<br>
-		<h3>Welcome to NodeMCU V3 ESP8266 / ESP12E with MYSQL Database</h3>
-		
-		<img src="home ok ok.png" alt="" style="width:55%;">
-	</body>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Home : NodeMCU V3 ESP8266 / ESP12E with MYSQL Database</title>
+    <style>
+        body { background: #f8fafc; }
+        .navbar-brand { font-weight: bold; }
+        .main-card { max-width: 600px; margin: 40px auto; box-shadow: 0 2px 16px rgba(0,0,0,0.07); border-radius: 16px; }
+        .main-img { border-radius: 12px; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">RFID System</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="user data.php">User Data</a></li>
+        <li class="nav-item"><a class="nav-link" href="registration.php">Registration</a></li>
+        <li class="nav-item"><a class="nav-link" href="read tag.php">Read Tag ID</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  <div class="card main-card p-4 mt-5">
+    <h2 class="text-center mb-3">NodeMCU V3 ESP8266 / ESP12E with MYSQL Database</h2>
+    <div class="alert alert-info text-center mb-4">This is the home page. Use the navigation bar to access user data, registration, or read tag features.</div>
+    <img src="home ok ok.png" alt="" class="img-fluid main-img mb-3">
+    <h5 class="text-center">Welcome to your modernized RFID system dashboard!</h5>
+  </div>
+</div>
+</body>
 </html>

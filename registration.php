@@ -30,6 +30,8 @@
         <li class="nav-item"><a class="nav-link" href="user data.php">User Data</a></li>
         <li class="nav-item"><a class="nav-link active" href="registration.php">Registration</a></li>
         <li class="nav-item"><a class="nav-link" href="read tag.php">Read Tag ID</a></li>
+        <li class="nav-item"><a class="nav-link" href="history.php">History</a></li>
+
       </ul>
     </div>
   </div>

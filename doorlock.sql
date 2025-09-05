@@ -14,7 +14,20 @@ CREATE TABLE user_info (
     mobile VARCHAR(100) NOT NULL
 );
 
+-- Table structure for table `access_log`
+CREATE TABLE access_log (
+    log_id SERIAL PRIMARY KEY,
+    user_id INTEGER,
+    rfid_id VARCHAR(100),
+    action VARCHAR(50),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user_info(user_id)
+);
+
 -- Dumping data for table `user_info`
 INSERT INTO user_info (name, id, gender, email, mobile) VALUES
 ('Leo', '39EAB06D', 'Male', 'leo@gmail.com', '991252104'),
 ('Azumi', '769174F8', 'Female', 'azumi@email.com', '23456789');
+
+-- Sample log entry
+INSERT INTO access_log (user_id, rfid_id, action) VALUES (1, '39EAB06D', 'login');

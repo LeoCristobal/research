@@ -1,7 +1,7 @@
 <?php
 	class Database
 	{
-		private static $dbName = 'nodemcu_rfid_iot_projects' ;
+		private static $dbName = 'research' ;
 		private static $dbHost = 'localhost' ;
 
 		// private static $dbHost = '127.0.0.1' ;

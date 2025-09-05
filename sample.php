@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['uid'])) {
         $uid = $_POST['uid'];
@@ -9,4 +9,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo "Waiting for POST request...";
 }
-?>
+?> -->

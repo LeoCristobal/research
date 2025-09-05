@@ -18,9 +18,18 @@ if (isset($_POST["uid"])) {
     $q->execute([$UIDresult]);
     $data = $q->fetch(PDO::FETCH_ASSOC);
 
+    // Log to access_log
     if ($data) {
+        // User found, log with user_id
+        $logSql = "INSERT INTO access_log (user_id, rfid_id, action) VALUES (?, ?, 'tap')";
+        $logQ = $pdo->prepare($logSql);
+        $logQ->execute([$data['user_id'], $UIDresult]);
         echo "AUTHORIZED";
     } else {
+        // User not found, log with NULL user_id
+        $logSql = "INSERT INTO access_log (user_id, rfid_id, action) VALUES (NULL, ?, 'tap')";
+        $logQ = $pdo->prepare($logSql);
+        $logQ->execute([$UIDresult]);
         echo "UNAUTHORIZED";
     }
 

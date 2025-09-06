@@ -1,108 +1,115 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
-#include <WiFiClient.h>
 #include <SPI.h>
 #include <MFRC522.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <Servo.h>
 
-// RFID wiring
-#define SS_PIN D8   // SDA / SS → D8 (GPIO15)
-#define RST_PIN D0  // RST → D0 (GPIO16)
+// ===== RFID Setup =====
+#define SS_PIN D8   // GPIO15
+#define RST_PIN D0  // GPIO16
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
-// On-board LED
-#define ON_Board_LED 2
+// ===== I2C LCD Setup =====
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-// WiFi credentials
+// ===== Servo Setup =====
+Servo myServo;
+#define SERVO_PIN D3
+
+// ===== WiFi & Server =====
 const char* ssid = "T-Attack";
 const char* password = "likeaboss08";
+String serverUrl = "http://192.168.254.177:8000/getUID.php";
 
-int readsuccess;
-byte readcard[4];
-char str[32] = "";
-String StrUID;
-
-HTTPClient http;
 WiFiClient client;
 
 void setup() {
   Serial.begin(115200);
-  SPI.begin();          // SCK → D5, MOSI → D7, MISO → D6 (as per your wiring)
+  SPI.begin();
   mfrc522.PCD_Init();
 
-  delay(500);
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0,0);
+  lcd.print("TAP YOUR CARD");
+
+  myServo.attach(SERVO_PIN);
+  myServo.write(0);
 
   WiFi.begin(ssid, password);
-  Serial.println("");
-    
-  pinMode(ON_Board_LED, OUTPUT);
-  digitalWrite(ON_Board_LED, HIGH);
-
-  Serial.print("Connecting");
+  Serial.print("Connecting to WiFi");
+  lcd.setCursor(0,1);
+  lcd.print("Connecting...");
   while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
     Serial.print(".");
-    digitalWrite(ON_Board_LED, LOW);
-    delay(250);
-    digitalWrite(ON_Board_LED, HIGH);
-    delay(250);
   }
-  digitalWrite(ON_Board_LED, HIGH);
-
-  Serial.println("");
-  Serial.print("Successfully connected to : ");
-  Serial.println(ssid);
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-
-  Serial.println("Please tag a card or keychain to see the UID !");
-  Serial.println("");
+  Serial.println("\nConnected to WiFi!");
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("TAP YOUR CARD");
 }
 
 void loop() {
-  readsuccess = getid();
- 
-  if (readsuccess) {  
-    digitalWrite(ON_Board_LED, LOW);
+  // Check for new RFID card
+  if (!mfrc522.PICC_IsNewCardPresent()) return;
+  if (!mfrc522.PICC_ReadCardSerial()) return;
 
-    String UIDresultSend = StrUID;
-    String postData = "UIDresult=" + UIDresultSend;
-
-    http.begin(client, "https://project-ny82.onrender.com/getUID.php");
-    http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-   
-    int httpCode = http.POST(postData);
-    String payload = http.getString();
-  
-    Serial.println(UIDresultSend);
-    Serial.println(httpCode);
-    Serial.println(payload);
-    
-    http.end();
-    delay(1000);
-    digitalWrite(ON_Board_LED, HIGH);
+  // Read UID
+  String uid = "";
+  for (byte i=0; i<mfrc522.uid.size; i++) {
+    uid += String(mfrc522.uid.uidByte[i], HEX);
   }
-}
+  uid.toUpperCase();
+  Serial.println("Scanned UID: " + uid);
 
-int getid() {  
-  if (!mfrc522.PICC_IsNewCardPresent()) return 0;
-  if (!mfrc522.PICC_ReadCardSerial()) return 0;
- 
-  Serial.print("THE UID OF THE SCANNED CARD IS : ");
-  
-  for (int i = 0; i < 4; i++) {
-    readcard[i] = mfrc522.uid.uidByte[i];
-    array_to_string(readcard, 4, str);
-    StrUID = str;
-  }   
+  // Decide action: "check" if just reading, "open" if real access
+  String action = "open"; // <-- default, you can change to "check" when using Read Tag page
+
+  // Send UID via POST
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    if (http.begin(client, serverUrl)) {
+      http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+      String postData = "uid=" + uid + "&action=" + action;
+      Serial.println("Sending POST data: " + postData);
+
+      int httpResponseCode = http.POST(postData);
+      Serial.println("HTTP Response Code: " + String(httpResponseCode));
+
+      if (httpResponseCode > 0) {
+        String response = http.getString();
+        response.trim();
+        Serial.println("Response: " + response);
+
+        if (response == "AUTHORIZED" && action == "open") {
+          lcd.clear();
+          lcd.setCursor(0, 0);
+          lcd.print("DOOR OPENED");
+          myServo.write(180);
+          delay(5000);
+          myServo.write(0);
+        } else if (action == "open") {
+          lcd.clear();
+          lcd.setCursor(0, 0);
+          lcd.print("NOT AUTHORIZED");
+          lcd.setCursor(0, 1);
+          lcd.print("CARD");
+          delay(2000);
+        }
+      } else {
+        Serial.println("Error sending UID. HTTP code: " + String(httpResponseCode));
+      }
+      http.end();
+    }
+  }
+
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("TAP YOUR CARD");
+
   mfrc522.PICC_HaltA();
-  return 1;
-}
-
-void array_to_string(byte array[], unsigned int len, char buffer[]) {
-  for (unsigned int i = 0; i < len; i++) {
-    byte nib1 = (array[i] >> 4) & 0x0F;
-    byte nib2 = (array[i] >> 0) & 0x0F;
-    buffer[i*2+0] = nib1 < 0xA ? '0' + nib1 : 'A' + nib1 - 0xA;
-    buffer[i*2+1] = nib2 < 0xA ? '0' + nib2 : 'A' + nib2 - 0xA;
-  }
-  buffer[len*2] = '\0';
+  mfrc522.PCD_StopCrypto1();
 }

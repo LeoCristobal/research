@@ -21,7 +21,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">RFID System</a>
+    <a class="navbar-brand" href="#">Door Lock System</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -30,7 +30,6 @@
         <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="user data.php">User Data</a></li>
         <li class="nav-item"><a class="nav-link" href="registration.php">Registration</a></li>
-        <li class="nav-item"><a class="nav-link" href="read tag.php">Read Tag ID</a></li>
         <li class="nav-item"><a class="nav-link" href="history.php">History</a></li>
       
       </ul>
@@ -39,10 +38,10 @@
 </nav>
 <div class="container">
   <div class="card main-card p-4 mt-5">
-    <h2 class="text-center mb-3">NodeMCU V3 ESP8266 / ESP12E with MYSQL Database</h2>
-    <div class="alert alert-info text-center mb-4">This is the home page. Use the navigation bar to access user data, registration, or read tag features.</div>
+    <h2 class="text-center mb-3">Door Lock System with Esp8266</h2>
+    <div class="alert alert-info text-center mb-4">This is the home page. Use the navigation bar to access user data, or registration features.</div>
     <img src="home ok ok.png" alt="" class="img-fluid main-img mb-3">
-    <h5 class="text-center">Welcome to your modernized RFID system dashboard!</h5>
+    <h5 class="text-center">Welcome to your  dashboard!</h5>
   </div>
 </div>
 </body>

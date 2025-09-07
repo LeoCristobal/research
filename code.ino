@@ -17,11 +17,16 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 // ===== Servo Setup =====
 Servo myServo;
 #define SERVO_PIN D3
+LiquidCrystal_I2C lcd(0x27, 16, 2); // Adjust address kung iba address ng LCD mo
+
+// ===== Servo Setup =====
+Servo myServo;
+#define SERVO_PIN D3  // GPIO0
 
 // ===== WiFi & Server =====
 const char* ssid = "T-Attack";
 const char* password = "likeaboss08";
-String serverUrl = "http://192.168.254.177:8000/getUID.php";
+String serverUrl = "http://192.168.254.177:8000/getUID.php"; // replace with phone's LAN IP
 
 WiFiClient client;
 
@@ -37,6 +42,10 @@ void setup() {
 
   myServo.attach(SERVO_PIN);
   myServo.write(0);
+  lcd.print("TAP YOUR CARD");   // ✅ Unang lalabas
+
+  myServo.attach(SERVO_PIN);
+  myServo.write(0); // initial position
 
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi");
@@ -50,6 +59,7 @@ void setup() {
   lcd.clear();
   lcd.setCursor(0,0);
   lcd.print("TAP YOUR CARD");
+  lcd.print("TAP YOUR CARD");   // ✅ Pagkatapos makakonek, balik ulit sa "TAP YOUR CARD"
 }
 
 void loop() {
@@ -65,15 +75,19 @@ void loop() {
   uid.toUpperCase();
   Serial.println("Scanned UID: " + uid);
 
+<<<<<<< HEAD
   // Decide action: "check" if just reading, "open" if real access
   String action = "open"; // <-- default, you can change to "check" when using Read Tag page
 
   // Send UID via POST
+=======
+  // Send UID via POST to server
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
     if (http.begin(client, serverUrl)) {
       http.addHeader("Content-Type", "application/x-www-form-urlencoded");
       String postData = "uid=" + uid + "&action=" + action;
+      String postData = "uid=" + uid;
       Serial.println("Sending POST data: " + postData);
 
       int httpResponseCode = http.POST(postData);
@@ -92,6 +106,14 @@ void loop() {
           delay(5000);
           myServo.write(0);
         } else if (action == "open") {
+        if (response == "AUTHORIZED") {
+          lcd.clear();
+          lcd.setCursor(0, 0);
+          lcd.print("DOOR OPENED");
+          myServo.write(180);   // open
+          delay(5000);          // wait 5 sec
+          myServo.write(0);     // close
+        } else {
           lcd.clear();
           lcd.setCursor(0, 0);
           lcd.print("NOT AUTHORIZED");
@@ -106,6 +128,7 @@ void loop() {
     }
   }
 
+  // After processing card → balik ulit sa "TAP YOUR CARD"
   lcd.clear();
   lcd.setCursor(0,0);
   lcd.print("TAP YOUR CARD");

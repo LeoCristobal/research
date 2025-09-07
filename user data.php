@@ -21,7 +21,7 @@ file_put_contents('UIDContainer.php', $Write);
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">RFID System</a>
+    <a class="navbar-brand" href="#">Door Lock System</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -30,7 +30,6 @@ file_put_contents('UIDContainer.php', $Write);
         <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
         <li class="nav-item"><a class="nav-link active" href="user_data.php">User Data</a></li>
         <li class="nav-item"><a class="nav-link" href="registration.php">Registration</a></li>
-        <li class="nav-item"><a class="nav-link" href="read_tag.php">Read Tag ID</a></li>
         <li class="nav-item"><a class="nav-link" href="history.php">History</a></li>
       </ul>
     </div>

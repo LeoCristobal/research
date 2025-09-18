@@ -19,4 +19,7 @@ SERVO MOTOR:
     - GND -> GND
     - 5V -> 5V
     - D3 (GPIO0) -> Signal (Yellow wire)
-    
+
+NOTE:
+    RUN THIS IN TERMINAL:
+        "C:\xampp\php\php.exe" -S 0.0.0.0:8000 -t "C:\FOR RESEARCH\research" 

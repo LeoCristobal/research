@@ -24,9 +24,9 @@ Servo myServo;
 #define SERVO_PIN D3  // GPIO0
 
 // ===== WiFi & Server =====
-const char* ssid = "T-Attack";
-const char* password = "likeaboss08";
-String serverUrl = "http://192.168.254.177:8000/getUID.php"; // replace with phone's LAN IP
+const char* ssid = "Your WIFI name";
+const char* password = "PASSWORD OF YOUR WIFI";
+String serverUrl = "http://IP OF YOUR WIFI/getUID.php"; // replace with phone's LAN IP
 
 WiFiClient client;
 
